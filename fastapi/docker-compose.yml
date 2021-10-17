@@ -1,0 +1,32 @@
+# docker-compose.yml
+
+version: '3.3'
+
+services:
+  web:
+    build: .
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0'
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql://testdb:testdb@db:5432/finmarka
+    depends_on:
+      - db
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=testdb
+      - POSTGRES_PASSWORD=testdb
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=finmarka
+      - POSTGRES_SERVER=db
+      - DATABASE_URL=postgresql://testdb:testdb@db:5432/finmarka
+
+volumes:
+  postgres_data:
