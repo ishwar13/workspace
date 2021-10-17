@@ -1,6 +1,6 @@
 
 cd fastapi/
-# cmd
+#cmd
 1.
 sudo docker-compose build
 2.
